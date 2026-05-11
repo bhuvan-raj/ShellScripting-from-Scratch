@@ -240,7 +240,7 @@ Send email alert
 
 ---
 
-## Disk Alert Script Lab Setup for **Amazon Linux** and **Ubuntu**
+# Disk Alert Script Lab Setup for **Amazon Linux** and **Ubuntu**
 
 We’ll cover:
 
@@ -252,7 +252,7 @@ We’ll cover:
 
 ---
 
-# The Script
+## The Script
 
 ```bash id="sc1a2b"
 #!/bin/bash
@@ -274,11 +274,11 @@ with your real email.
 
 ---
 
-# PART A — Ubuntu / Debian
+## PART A — Ubuntu / Debian
 
 ---
 
-# Step 1: Connect to Server
+### Step 1: Connect to Server
 
 ```bash id="ub1a2c"
 ssh ubuntu@your-server-ip
@@ -286,7 +286,7 @@ ssh ubuntu@your-server-ip
 
 ---
 
-# Step 2: Install Mail Packages
+### Step 2: Install Mail Packages
 
 ```bash id="ub3d4e"
 sudo apt update
@@ -295,7 +295,7 @@ sudo apt install mailutils postfix -y
 
 ---
 
-# Step 3: During Postfix Setup
+### Step 3: During Postfix Setup
 
 Choose:
 
@@ -311,7 +311,7 @@ server.localdomain
 
 ---
 
-# Step 4: Start Service
+### Step 4: Start Service
 
 ```bash id="ub9j0k"
 sudo systemctl enable postfix
@@ -321,7 +321,7 @@ sudo systemctl status postfix
 
 ---
 
-# Step 5: Create Script
+### Step 5: Create Script
 
 ```bash id="ub1l2m"
 nano disk_alert.sh
@@ -331,7 +331,7 @@ Paste script → Save.
 
 ---
 
-# Step 6: Give Permission
+### Step 6: Give Permission
 
 ```bash id="ub3n4o"
 chmod +x disk_alert.sh
@@ -339,7 +339,7 @@ chmod +x disk_alert.sh
 
 ---
 
-# Step 7: Test Mail
+### Step 7: Test Mail
 
 ```bash id="ub5p6q"
 echo "Ubuntu test mail" | mail -s "Mail Test" yourmail@gmail.com
@@ -347,7 +347,7 @@ echo "Ubuntu test mail" | mail -s "Mail Test" yourmail@gmail.com
 
 ---
 
-# Step 8: Run Script
+### Step 8: Run Script
 
 ```bash id="ub7r8s"
 ./disk_alert.sh
@@ -355,7 +355,7 @@ echo "Ubuntu test mail" | mail -s "Mail Test" yourmail@gmail.com
 
 ---
 
-# Step 9: Force Alert Test
+### Step 9: Force Alert Test
 
 Change:
 
@@ -367,7 +367,7 @@ Then run again.
 
 ---
 
-# Step 10: Mail Logs
+### Step 10: Mail Logs
 
 ```bash id="ub1v2w"
 sudo tail -f /var/log/mail.log
@@ -375,11 +375,11 @@ sudo tail -f /var/log/mail.log
 
 ---
 
-# PART B — Amazon Linux (EC2)
+## PART B — Amazon Linux (EC2)
 
 ---
 
-# Step 1: Connect to EC2
+### Step 1: Connect to EC2
 
 ```bash id="am1a2b"
 ssh -i key.pem ec2-user@ec2-public-ip
@@ -387,16 +387,16 @@ ssh -i key.pem ec2-user@ec2-public-ip
 
 ---
 
-# Step 2: Install Mail Packages
+### Step 2: Install Mail Packages
 
-## Amazon Linux 2
+### Amazon Linux 2
 
 ```bash id="am3c4d"
 sudo yum update -y
 sudo yum install postfix mailx -y
 ```
 
-## Amazon Linux 2023
+### Amazon Linux 2023
 
 ```bash id="am5e6f"
 sudo dnf update -y
@@ -405,7 +405,7 @@ sudo dnf install postfix mailx -y
 
 ---
 
-# Step 3: Enable Mail Service
+### Step 3: Enable Mail Service
 
 ```bash id="am7g8h"
 sudo systemctl enable postfix
@@ -415,7 +415,7 @@ sudo systemctl status postfix
 
 ---
 
-# Step 4: Create Script
+### Step 4: Create Script
 
 ```bash id="am9i0j"
 nano disk_alert.sh
@@ -425,7 +425,7 @@ Paste script.
 
 ---
 
-# Step 5: Give Permission
+### Step 5: Give Permission
 
 ```bash id="am1k2l"
 chmod +x disk_alert.sh
@@ -433,7 +433,7 @@ chmod +x disk_alert.sh
 
 ---
 
-# Step 6: Test Mail
+### Step 6: Test Mail
 
 ```bash id="am3m4n"
 echo "Amazon Linux test mail" | mail -s "Mail Test" yourmail@gmail.com
@@ -441,7 +441,7 @@ echo "Amazon Linux test mail" | mail -s "Mail Test" yourmail@gmail.com
 
 ---
 
-# Step 7: Run Script
+### Step 7: Run Script
 
 ```bash id="am5o6p"
 ./disk_alert.sh
@@ -449,7 +449,7 @@ echo "Amazon Linux test mail" | mail -s "Mail Test" yourmail@gmail.com
 
 ---
 
-# Step 8: Mail Logs
+### Step 8: Mail Logs
 
 ```bash id="am7q8r"
 sudo tail -f /var/log/maillog
@@ -457,58 +457,11 @@ sudo tail -f /var/log/maillog
 
 ---
 
-# IMPORTANT for AWS EC2
+## IMPORTANT for AWS EC2
 
 Direct outbound SMTP (port 25) may be blocked by AWS.
 
 So mail may fail unless you use:
-
-## Recommended:
-
-* Amazon SES
-* Gmail SMTP relay
-* SendGrid
-
----
-
-# Best AWS Method: Amazon SES SMTP
-
-Use SES instead of local postfix sending.
-
-Then configure Postfix relay.
-
-If you'd like, I can give exact SES setup.
-
----
-
-# Cron Job for Both Ubuntu / Amazon Linux
-
-Run every 5 mins:
-
-```bash id="cr1a2b"
-crontab -e
-```
-
-Add:
-
-```bash id="cr3c4d"
-*/5 * * * * /home/ec2-user/disk_alert.sh
-```
-
-Ubuntu user:
-
-```bash id="cr5e6f"
-*/5 * * * * /home/ubuntu/disk_alert.sh
-```
-
----
-
-# Verify Cron
-
-```bash id="cr7g8h"
-crontab -l
-```
-
 ---
 
 # Common Problems
