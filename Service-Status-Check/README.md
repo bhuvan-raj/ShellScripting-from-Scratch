@@ -394,119 +394,157 @@ Print healthy    Restart service
 
 ---
 
-# Real Output Examples
+# Checking Multiple Services at Once in Shell Script
+
+If you want to monitor **multiple services** instead of just one (`nginx`), the best approach is to use a **loop** with a list/array of service names.
+
+This is common in real DevOps environments where one server may run:
+
+* nginx
+* docker
+* jenkins
+* mysql
+* sshd
 
 ---
 
-# Scenario 1: Running
+# Multi-Service Restart Script
 
-```text id="s1i2j3"
+```bash id="m1a2b3"
+#!/bin/bash
+
+#########################################
+# Multi Service Monitor & Restart Script
+#########################################
+
+SERVICES=("nginx" "docker" "jenkins")
+
+for SERVICE in "${SERVICES[@]}"
+do
+    systemctl is-active --quiet "$SERVICE"
+
+    if [ $? -ne 0 ]; then
+        echo "$SERVICE is down. Restarting..."
+
+        systemctl restart "$SERVICE"
+
+        if [ $? -eq 0 ]; then
+            echo "$SERVICE restarted successfully."
+        else
+            echo "Failed to restart $SERVICE."
+        fi
+    else
+        echo "$SERVICE is running normally."
+    fi
+
+done
+```
+
+---
+
+# How This Works
+
+---
+
+# 1. Array of Services
+
+```bash id="m4c5d6"
+SERVICES=("nginx" "docker" "jenkins")
+```
+
+Stores multiple service names.
+
+---
+
+# 2. for Loop
+
+```bash id="m7e8f9"
+for SERVICE in "${SERVICES[@]}"
+```
+
+Loops through each service one by one.
+
+Execution order:
+
+```text id="m0g1h2"
+nginx
+docker
+jenkins
+```
+
+---
+
+# 3. Check Each Service
+
+```bash id="m3i4j5"
+systemctl is-active --quiet "$SERVICE"
+```
+
+Checks current loop service.
+
+---
+
+# 4. Restart if Down
+
+If stopped:
+
+```bash id="m6k7l8"
+systemctl restart "$SERVICE"
+```
+
+---
+
+# Example Output
+
+## Scenario:
+
+* nginx running
+* docker stopped
+* jenkins running
+
+```text id="m9m0n1"
 nginx is running normally.
+docker is down. Restarting...
+docker restarted successfully.
+jenkins is running normally.
 ```
 
 ---
 
-# Scenario 2: Down but Restarted
+# Why This Is Better Than Separate Scripts
 
-```text id="s4k5l6"
-nginx is down. Restarting...
-nginx restarted successfully.
+Instead of:
+
+```bash id="m2o3p4"
+check nginx
+check docker
+check jenkins
 ```
 
+One script manages all.
+
 ---
 
-# Scenario 3: Down and Failed
+# Real Services You Can Monitor
 
-```text id="s7m8n9"
-nginx is down. Restarting...
-Failed to restart nginx.
+Ubuntu:
+
+```bash id="m5q6r7"
+apache2
+mysql
+ssh
+docker
+jenkins
 ```
 
----
+Amazon Linux / RHEL:
 
-# Real DevOps Uses
-
----
-
-# Auto-Healing
-
-Automatically recover failed services.
-
----
-
-# Cron Monitoring
-
-Run every minute:
-
-```bash id="s0o1p2"
-* * * * * /home/ec2-user/restart.sh
+```bash id="m8s9t0"
+httpd
+mariadb
+sshd
+docker
+nginx
 ```
-
----
-
-# CI/CD Environments
-
-Restart Jenkins, SonarQube, etc.
-
----
-
-# Cloud Servers
-
-EC2 / Azure VM / GCP VM monitoring.
-
----
-
-# Improvements for Production
-
----
-
-# 1. Logging
-
-```bash id="s3q4r5"
-echo "$(date) nginx restarted" >> /var/log/service-monitor.log
-```
-
----
-
-# 2. Email Alert
-
-```bash id="s6s7t8"
-mail -s "Service Restarted" admin@example.com
-```
-
----
-
-# 3. Slack Alert
-
-Webhook notification.
-
----
-
-# 4. Multiple Services
-
-```bash id="s9u0v1"
-for svc in nginx docker jenkins
-```
-
----
-
-# 5. Use Direct Condition
-
-Better style:
-
-```bash id="s2w3x4"
-if systemctl is-active --quiet nginx
-then
-   echo running
-else
-   systemctl restart nginx
-fi
-```
-
----
-
-# Interview Explanation
-
-> This script checks whether a Linux service is active using `systemctl is-active --quiet`. If the service is down, it restarts it automatically and verifies whether the restart succeeded.
 
 ---
