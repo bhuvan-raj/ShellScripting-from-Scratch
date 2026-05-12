@@ -99,6 +99,11 @@ This section covers building a production-ready disk service monitoring script w
 📂 **[Explore → Service Status Check](./Service-Status-Check/)**
 
 ---
+## 9. CPU Monitoring and Alert
+
+this script covers the logic of monitoring CPU and sends alert if the cpu usage is exceeding the target value.
+
+📂 **[Explore → CPU Monitoring and Alert](./CPU-Monitoring-And-Alert/)**
 
 ## 🛠️ Prerequisites
 
