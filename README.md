@@ -92,6 +92,14 @@ This section covers building a production-ready disk monitoring script. You'll l
 
 ---
 
+## 8. Service Status Check
+
+This section covers building a production-ready disk service monitoring script where it checks whether a particular service is running or not, if it is not running, the script will automatically restarts that particular service using systemctl.
+
+📂 **[Explore → Service Status Check](./Service-Status-Check/)**
+
+---
+
 ## 🛠️ Prerequisites
 
 Before diving in, make sure you have:
